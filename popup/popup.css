@@ -1,0 +1,101 @@
+:root {
+  --bg: #1e1e2e;
+  --text: #cdd6f4;
+  --card-bg: #313244;
+  --card-hover: #45475a;
+  --accent: #89b4fa;
+  --danger: #f38ba8;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  width: 320px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.header h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.profile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  background-color: var(--card-hover);
+}
+
+.card.active {
+  border-color: var(--accent);
+  background-color: rgba(137, 180, 250, 0.1);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  color: #a6adc8;
+}
+
+.divider {
+  height: 1px;
+  background-color: #45475a;
+  margin: 20px 0;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button.primary {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+button.primary:hover {
+  background-color: #b4befe;
+}
+
+button.secondary {
+  background-color: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+button.secondary:hover {
+  background-color: rgba(243, 139, 168, 0.1);
+}

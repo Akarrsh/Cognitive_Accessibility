@@ -1,0 +1,91 @@
+/* ----- NEURO-ACCESSIBILITY OVERRIDES ----- */
+/* These styles only activate when the corresponding class is added to the HTML/BODY tag by our content script */
+
+/* 1. ADHD FOCUS MODE */
+html.neuro-adhd aside, 
+html.neuro-adhd nav, 
+html.neuro-adhd [class*="sidebar"],
+html.neuro-adhd [id*="sidebar"],
+html.neuro-adhd [class*="ad-"],
+html.neuro-adhd iframe,
+html.neuro-adhd .popup,
+html.neuro-adhd .modal,
+html.neuro-adhd [role="dialog"],
+html.neuro-adhd footer {
+  display: none !important;
+}
+
+html.neuro-adhd body {
+  display: block !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  background-color: #fcfcfc !important;
+  padding: 1rem 2rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Force primary containers to fill the newly linearized 800px body and strip grid/flex layouts */
+html.neuro-adhd .mw-page-container,
+html.neuro-adhd .mw-page-container-inner,
+html.neuro-adhd main,
+html.neuro-adhd article,
+html.neuro-adhd .mw-body,
+html.neuro-adhd #content,
+html.neuro-adhd #maincontent {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+
+/* 2. AUTISM MODE */
+html.neuro-autism * {
+  animation: none !important;
+  transition: none !important;
+  background-attachment: scroll !important;
+}
+
+html.neuro-autism body {
+  background-color: #f4ecdf !important; /* Sepia-ish muted */
+  color: #333333 !important;
+}
+
+html.neuro-autism * {
+  background-color: inherit !important;
+  color: inherit !important;
+  border-color: #cccccc !important;
+}
+
+html.neuro-autism img, 
+html.neuro-autism video, 
+html.neuro-autism iframe {
+  filter: grayscale(40%) sepia(20%) !important;
+}
+
+
+/* 3. DYSLEXIA MODE */
+/* Fallback to comic sans if we haven't loaded OpenDyslexic yet, as it's universally known to help */
+html.neuro-dyslexia *, html.neuro-dyslexia body {
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif !important;
+  line-height: 1.8 !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+  text-align: left !important; /* Overrides justified text */
+}
+
+/* Base styling for our AI simplified blocks */
+.neuro-ai-block {
+  background: #eef2ff;
+  border-left: 4px solid #6366f1;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-family: sans-serif;
+  color: #1e1b4b;
+}
