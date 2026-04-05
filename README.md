@@ -471,19 +471,22 @@ Fonts are loaded lazily — `<link>` elements are injected into the page's `<hea
 ```text
 User clicks "🤖 AI Summarize Page"
   → popup.js: sendMessage({ action: 'simplifyText' })
-    → content.js: extractPageText()
-      - Prioritizes: article > [role="main"] > main > .content > #content > body
-      - Extracts from: p, h1-h6, li, blockquote, figcaption, td
-      - Filters: snippets < 10 chars excluded
-      - Caps: 4000 character limit
-    → content.js: createPanel() — shows loading spinner
+    → content.js: checks window.getSelection().toString()
+      - If text is highlighted: Summarize only the selection (Capped at 4000 chars)
+      - If NO selection: Fallback to extractPageText() 
+        - Prioritizes: article > [role="main"] > main > .content > #content > body
+        - Extracts from: p, h1-h6, li, blockquote, figcaption, td
+        - Capped at 4000 character limit
+    → content.js: createPanel(isSelection)
+      - Dynamic title: "🤖 AI Simplified Selection" vs "🤖 AI Simplified Page"
+      - Shows loading spinner
     → content.js: sendMessage({ action: 'fetchOllama', text })
       → background.js: POST http://127.0.0.1:11434/api/generate
         - Model: gemma3:1b
-        - Prompt: "Rewrite at 8th-grade reading level. Do NOT use markdown..."
+        - Prompt: Strictly enforces plain text, prevents "8th-grade" mentions, blocks conversational filler
         - stream: false
       → background.js: sendResponse({ success, text })
-    → content.js: renderResult(text) — replaces spinner with paragraphs
+    → content.js: renderResult(text) — parses basic markdown, replaces spinner with paragraphs
     → OR: renderError(msg) — shows troubleshooting instructions
 ```
 
