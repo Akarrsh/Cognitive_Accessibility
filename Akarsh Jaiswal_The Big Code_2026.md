@@ -3,8 +3,8 @@
 **Event:** The Big Code 2026
 
 **Project Links & Resources**
-*   **GitHub Repository:** [Insert your GitHub URL here]
-*   **Full Technical README:** [Insert link to the README in your repo here]
+*   **GitHub Repository:** [https://github.com/Akarrsh/Cognitive_Accessibility](https://github.com/Akarrsh/Cognitive_Accessibility)
+*   **Full Technical README:** [https://github.com/Akarrsh/Cognitive_Accessibility/blob/main/README.md](https://github.com/Akarrsh/Cognitive_Accessibility/blob/main/README.md)
 
 ---
 
