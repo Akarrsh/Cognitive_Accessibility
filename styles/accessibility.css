@@ -1,47 +1,63 @@
 /* ----- NEURO-ACCESSIBILITY OVERRIDES ----- */
 /* These styles only activate when the corresponding class is added to the HTML/BODY tag by our content script */
 
-/* 1. ADHD FOCUS MODE */
-html.neuro-adhd aside, 
-html.neuro-adhd nav, 
-html.neuro-adhd [class*="sidebar"],
-html.neuro-adhd [id*="sidebar"],
-html.neuro-adhd [class*="ad-"],
-html.neuro-adhd iframe,
-html.neuro-adhd .popup,
-html.neuro-adhd .modal,
-html.neuro-adhd [role="dialog"],
-html.neuro-adhd footer {
+/* 1. ADHD FOCUS MODE — Non-destructive visual noise reducer */
+/* Philosophy: NEVER hide or reposition elements. Instead, dim distractions,     */
+/* kill motion, simplify visuals, and subtly highlight focus areas.               */
+
+/* a) Kill all animations and transitions to eliminate visual distraction */
+html.neuro-adhd *,
+html.neuro-adhd *::before,
+html.neuro-adhd *::after {
+  animation: none !important;
+  animation-delay: 0s !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* b) Dim secondary areas — NOT hidden, just faded so the eye ignores them */
+html.neuro-adhd aside,
+html.neuro-adhd [class*="sidebar" i],
+html.neuro-adhd [id*="sidebar" i],
+html.neuro-adhd [role="complementary"],
+html.neuro-adhd [role="banner"],
+html.neuro-adhd footer,
+html.neuro-adhd [role="contentinfo"] {
+  opacity: 0.35 !important;
+  filter: grayscale(80%) !important;
+}
+html.neuro-adhd aside:hover,
+html.neuro-adhd [class*="sidebar" i]:hover,
+html.neuro-adhd [id*="sidebar" i]:hover,
+html.neuro-adhd [role="complementary"]:hover,
+html.neuro-adhd [role="banner"]:hover,
+html.neuro-adhd footer:hover,
+html.neuro-adhd [role="contentinfo"]:hover {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* c) Hide known ad containers — selectors must be narrow to avoid false positives */
+/* NEVER use [class*="ad-"] — it matches "header", "thread", "shadow", "padding" etc. */
+html.neuro-adhd [class*="advert" i],
+html.neuro-adhd [class*="sponsored" i],
+html.neuro-adhd [class*="promo-banner" i],
+html.neuro-adhd [data-ad],
+html.neuro-adhd [data-ad-slot],
+html.neuro-adhd [data-google-query-id],
+html.neuro-adhd ins.adsbygoogle {
   display: none !important;
 }
 
-html.neuro-adhd body {
-  display: block !important;
-  max-width: 800px !important;
-  margin: 0 auto !important;
-  background-color: #fcfcfc !important;
-  padding: 1rem 2rem !important;
-  box-sizing: border-box !important;
+/* d) Suppress visual noise — reduce shadows, borders, decorative gradients */
+html.neuro-adhd * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
 }
 
-/* Force primary containers to fill the newly linearized 800px body and strip grid/flex layouts */
-html.neuro-adhd .mw-page-container,
-html.neuro-adhd .mw-page-container-inner,
-html.neuro-adhd main,
-html.neuro-adhd article,
-html.neuro-adhd .mw-body,
-html.neuro-adhd #content,
-html.neuro-adhd #maincontent {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  box-shadow: none !important;
-  border: none !important;
-}
+
+
 
 
 /* 2. AUTISM MODE */
