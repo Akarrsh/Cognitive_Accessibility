@@ -1,25 +1,36 @@
 // Apply initial state before page fully paints to avoid FOUC
-chrome.storage.local.get('activeProfile', (data) => {
-  if (data.activeProfile) {
-    applyProfile(data.activeProfile);
+chrome.storage.local.get(['activeProfiles', 'activeTheme'], (data) => {
+  if (data.activeProfiles || data.activeTheme) {
+    applyState(data.activeProfiles || [], data.activeTheme || 'none');
   }
 });
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.profile) {
-    applyProfile(request.profile);
+  if (request.profiles !== undefined || request.theme !== undefined) {
+    applyState(request.profiles, request.theme);
   } else if (request.action === 'simplifyText') {
     handleSimplifyRequest();
   }
 });
 
-function applyProfile(profileName) {
+function applyState(profileNames, themeName) {
   // Clear all neuro profiles first
   document.documentElement.classList.remove('neuro-adhd', 'neuro-autism', 'neuro-dyslexia');
   
-  if (profileName !== 'reset') {
-    document.documentElement.classList.add(`neuro-${profileName}`);
+  // Clear previous themes
+  document.documentElement.removeAttribute('data-neuro-theme');
+  
+  // Support multiple toggled modes
+  if (Array.isArray(profileNames)) {
+    profileNames.forEach(profileName => {
+      document.documentElement.classList.add(`neuro-${profileName}`);
+    });
+  }
+
+  // Apply theme if not none
+  if (themeName && themeName !== 'none') {
+    document.documentElement.setAttribute('data-neuro-theme', themeName);
   }
 }
 

@@ -51,22 +51,118 @@ html.neuro-autism * {
   background-attachment: scroll !important;
 }
 
-html.neuro-autism body {
-  background-color: #f4ecdf !important; /* Sepia-ish muted */
-  color: #333333 !important;
+/* 4. SENSORY BASE THEMES */
+/* Overrides system/site colors specifically and safely depending on the selected theme */
+
+html[data-neuro-theme="soft-dark"] {
+  color-scheme: dark !important;
+  --neuro-bg: #1e1e2e;
+  --neuro-text: #cdd6f4;
+  --neuro-border: #45475a;
 }
 
-html.neuro-autism * {
-  background-color: inherit !important;
-  color: inherit !important;
-  border-color: #cccccc !important;
+html[data-neuro-theme="sepia"] {
+  color-scheme: light !important;
+  --neuro-bg: #f4ecdf;
+  --neuro-text: #333333;
+  --neuro-border: #d7c9b4;
 }
 
+html[data-neuro-theme="muted-light"] {
+  color-scheme: light !important;
+  --neuro-bg: #e5e7eb;
+  --neuro-text: #1f2937;
+  --neuro-border: #9ca3af;
+}
+
+/* ------------------------------------------- */
+/* THE GREAT THEME NEUTRALIZER */
+/* ------------------------------------------- */
+/* 1. Strip backgrounds and text colors from every element natively so we can control them */
+html[data-neuro-theme] *,
+html[data-neuro-theme] *::before,
+html[data-neuro-theme] *::after {
+  background-color: transparent !important;
+  background-image: none !important; /* Strips linear-gradients like ChatGPT's sticky blur */
+  color: var(--neuro-text) !important;
+  border-color: var(--neuro-border) !important;
+  box-shadow: none !important;
+}
+
+/* 2. Apply the chosen color to the root and body */
+html[data-neuro-theme],
+html[data-neuro-theme] body {
+  background-color: var(--neuro-bg) !important;
+  color: var(--neuro-text) !important;
+}
+
+/* 3. Re-apply opaque backgrounds ONLY to major structural containers and overlays so things don't become illegible when overlapping */
+html[data-neuro-theme] header, 
+html[data-neuro-theme] footer, 
+html[data-neuro-theme] nav, 
+html[data-neuro-theme] aside, 
+html[data-neuro-theme] section, 
+html[data-neuro-theme] article, 
+html[data-neuro-theme] main,
+html[data-neuro-theme] form,
+html[data-neuro-theme] dialog,
+html[data-neuro-theme] #content,
+html[data-neuro-theme] .mw-body,
+html[data-neuro-theme] .mw-page-container,
+html[data-neuro-theme] table,
+html[data-neuro-theme] th,
+html[data-neuro-theme] td,
+html[data-neuro-theme] [role="dialog"],
+html[data-neuro-theme] [role="menu"],
+html[data-neuro-theme] [role="listbox"],
+html[data-neuro-theme] [role="tooltip"],
+html[data-neuro-theme] [class*="footer"],
+html[data-neuro-theme] [class*="bottom"],
+html[data-neuro-theme] [class*="sticky"],
+html[data-neuro-theme] .modal,
+html[data-neuro-theme] .popup {
+  background-color: var(--neuro-bg) !important;
+  color: var(--neuro-text) !important;
+  border-color: var(--neuro-border) !important;
+}
+
+/* 4. Restore boundaries to interactive elements so users know where to click/type */
+html[data-neuro-theme] input, 
+html[data-neuro-theme] button, 
+html[data-neuro-theme] textarea, 
+html[data-neuro-theme] select,
+html[data-neuro-theme] [role="button"],
+html[data-neuro-theme] [role="textbox"],
+html[data-neuro-theme] [contenteditable="true"] {
+  background-color: var(--neuro-bg) !important;
+  color: var(--neuro-text) !important;
+  border: 2px solid var(--neuro-border) !important;
+  border-radius: 8px !important;
+}
+
+/* Ensure text areas and input boxes have physical space to look like a box */
+html[data-neuro-theme] input,
+html[data-neuro-theme] textarea,
+html[data-neuro-theme] [role="textbox"],
+html[data-neuro-theme] [contenteditable="true"] {
+  padding: 10px 14px !important;
+  min-height: 24px !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure links are identifiable */
+html[data-neuro-theme] a {
+  text-decoration: underline !important;
+  opacity: 0.9 !important;
+}
+
+/* Base Autism Mode Additions */
 html.neuro-autism img, 
 html.neuro-autism video, 
 html.neuro-autism iframe {
   filter: grayscale(40%) sepia(20%) !important;
 }
+
 
 
 /* 3. DYSLEXIA MODE */
