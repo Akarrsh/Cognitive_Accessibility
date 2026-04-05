@@ -21,7 +21,7 @@ async function fetchOllamaAPI(text) {
       },
       body: JSON.stringify({
         model: "gemma3:1b", // Lightweight model — fast on CPU
-        prompt: `Rewrite the following text so it is extremely simple to understand. Use short sentences. Reduce jargon to an 8th-grade reading level. Keep the core facts. Do NOT use any markdown formatting like asterisks or hashtags — just use plain text.\n\n${text}`,
+        prompt: `Rewrite the following text so it is extremely simple to understand. Use short sentences. Reduce jargon to an 8th-grade reading level. Keep the core facts. Do NOT use any markdown formatting like asterisks or hashtags. Important: Just provide the rewritten text directly — do NOT mention the 8th-grade reading level, and do NOT add intro/outro phrases like "Here is the rewritten text:".\n\n${text}`,
         stream: false
       })
     });

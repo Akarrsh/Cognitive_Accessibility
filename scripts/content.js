@@ -94,22 +94,25 @@ function extractPageText() {
   return text.substring(0, 4000);
 }
 
-function createPanel() {
+function createPanel(isSelection = false) {
   // Remove existing panel if present
   const existing = document.getElementById('neuro-ai-panel');
   if (existing) existing.remove();
+
+  const title = isSelection ? '🤖 AI Simplified Selection' : '🤖 AI Simplified Page';
+  const loadingText = isSelection ? 'Simplifying selected text…' : 'Simplifying page content…';
 
   const panel = document.createElement('div');
   panel.id = 'neuro-ai-panel';
   panel.innerHTML = `
     <div class="neuro-ai-panel-header">
-      <span>🤖 AI Simplified Version</span>
+      <span>${title}</span>
       <button id="neuro-ai-close" title="Close">&times;</button>
     </div>
     <div class="neuro-ai-panel-body" id="neuro-ai-body">
       <div class="neuro-ai-loading">
         <div class="neuro-ai-spinner"></div>
-        <p>Simplifying page content…</p>
+        <p>${loadingText}</p>
         <p style="font-size: 0.8rem; opacity: 0.6;">Waiting for local Ollama (gemma3:1b)</p>
       </div>
     </div>
@@ -158,19 +161,25 @@ function renderError(errorMsg) {
 }
 
 async function handleSimplifyRequest() {
-  const pageText = extractPageText();
+  const selection = window.getSelection().toString().trim();
+  const isSelection = selection.length > 0;
   
-  if (!pageText || pageText.length < 50) {
-    alert('Not enough readable text found on this page to simplify.');
+  // Cap selection at 4000 chars, or fallback to page text
+  const targetText = isSelection ? selection.substring(0, 4000) : extractPageText();
+  
+  if (!targetText || targetText.length < 50) {
+    alert(isSelection 
+      ? 'Selected text is too short to summarize (select at least a paragraph).' 
+      : 'Not enough readable text found on this page to simplify.');
     return;
   }
 
-  // Show the panel with loading state
-  createPanel();
+  // Show the panel with loading state contextually
+  createPanel(isSelection);
 
   // Send text to background.js → Ollama
   chrome.runtime.sendMessage(
-    { action: 'fetchOllama', text: pageText },
+    { action: 'fetchOllama', text: targetText },
     (response) => {
       if (chrome.runtime.lastError) {
         renderError(chrome.runtime.lastError.message);
