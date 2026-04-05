@@ -20,8 +20,8 @@ async function fetchOllamaAPI(text) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama3", // Assuming user has llama3 loaded
-        prompt: `Please rewrite the following text to be extremely simple to understand, use short sentences, and reduce jargon to an 8th-grade reading level. Keep the core facts:\n\n${text}`,
+        model: "gemma3:1b", // Lightweight model — fast on CPU
+        prompt: `Rewrite the following text so it is extremely simple to understand. Use short sentences. Reduce jargon to an 8th-grade reading level. Keep the core facts. Do NOT use any markdown formatting like asterisks or hashtags — just use plain text.\n\n${text}`,
         stream: false
       })
     });

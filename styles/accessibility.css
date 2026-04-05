@@ -250,13 +250,95 @@ html.neuro-dyslexia[data-neuro-font="atkinson"] * {
   font-family: 'Atkinson Hyperlegible', sans-serif !important;
 }
 
-/* Base styling for our AI simplified blocks */
-.neuro-ai-block {
-  background: #eef2ff;
-  border-left: 4px solid #6366f1;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 4px;
-  font-family: sans-serif;
-  color: #1e1b4b;
+/* ── AI Simplification Panel ─────────────────────────────────────────────────── */
+#neuro-ai-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 420px;
+  max-height: 70vh;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border: 1px solid #45475a;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 2147483647;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
+
+.neuro-ai-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #313244;
+  border-bottom: 1px solid #45475a;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.neuro-ai-panel-header button {
+  background: none;
+  border: none;
+  color: #f38ba8;
+  font-size: 1.4rem;
+  cursor: pointer;
+  width: auto;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.neuro-ai-panel-body {
+  padding: 18px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.neuro-ai-panel-body p {
+  margin: 0 0 12px 0;
+  color: #cdd6f4;
+}
+
+/* Loading state */
+.neuro-ai-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  gap: 12px;
+}
+
+.neuro-ai-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #45475a;
+  border-top-color: #89b4fa;
+  border-radius: 50%;
+  animation: neuro-spin 0.8s linear infinite;
+}
+
+@keyframes neuro-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error state */
+.neuro-ai-error {
+  background: rgba(243, 139, 168, 0.1);
+  border: 1px solid #f38ba8;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.neuro-ai-error code {
+  background: #313244;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #89b4fa;
+}
+
