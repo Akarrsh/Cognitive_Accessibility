@@ -3,88 +3,108 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnReset = document.getElementById('btn-reset');
   const btnSimplify = document.getElementById('btn-simplify');
   const themeSelector = document.getElementById('theme-selector');
+  const fontSelector = document.getElementById('font-selector');
 
-  // Load saved state - now handles multiple profiles and theme
-  const data = await chrome.storage.local.get(['activeProfiles', 'activeTheme']);
+  // Load saved state
+  const data = await chrome.storage.local.get(['activeProfiles', 'activeTheme', 'activeDyslexiaFont']);
   const activeProfiles = data.activeProfiles || [];
   const activeTheme = data.activeTheme || 'none';
-  
-  // Update UI helper
-  const selectedOptionUI = themeSelector.querySelector('.selected-option');
-  const selectedContentUI = themeSelector.querySelector('.selected-content');
-  function updateDropdownUI(themeValue) {
-    const chosenOption = themeSelector.querySelector(`.option[data-value="${themeValue}"]`);
-    if (chosenOption && selectedContentUI) {
-      selectedContentUI.innerHTML = chosenOption.innerHTML;
-    }
-  }
-  
-  updateDropdownUI(activeTheme);
+  const activeDyslexiaFont = data.activeDyslexiaFont || 'comic-sans';
 
+  // ── Theme dropdown helpers ──────────────────────────────────────────────
+  const themeSelectedContent = themeSelector.querySelector('.selected-content');
+  function updateThemeUI(value) {
+    const opt = themeSelector.querySelector(`.option[data-value="${value}"]`);
+    if (opt && themeSelectedContent) themeSelectedContent.innerHTML = opt.innerHTML;
+  }
+  updateThemeUI(activeTheme);
+
+  // ── Font dropdown helpers ────────────────────────────────────────────────
+  const fontSelectedOption = document.getElementById('font-selected-option');
+  const fontSelectedContent = fontSelectedOption.querySelector('.selected-content');
+  function updateFontUI(value) {
+    const opt = fontSelector.querySelector(`.option[data-value="${value}"]`);
+    if (opt && fontSelectedContent) fontSelectedContent.innerHTML = opt.innerHTML;
+  }
+  updateFontUI(activeDyslexiaFont);
+
+  // ── Restore active profile cards ─────────────────────────────────────────
   activeProfiles.forEach(profile => {
     document.querySelector(`[data-profile="${profile}"]`)?.classList.add('active');
   });
 
-  // Handle profile clicks
+  // ── Profile card clicks ──────────────────────────────────────────────────
   cards.forEach(card => {
     card.addEventListener('click', async () => {
-      // Toggle active UX for multiple selection
       card.classList.toggle('active');
-
       const profile = card.dataset.profile;
-      let { activeProfiles = [], activeTheme = 'none' } = await chrome.storage.local.get(['activeProfiles', 'activeTheme']);
-      
+      let { activeProfiles = [], activeTheme = 'none', activeDyslexiaFont = 'comic-sans' } =
+        await chrome.storage.local.get(['activeProfiles', 'activeTheme', 'activeDyslexiaFont']);
+
       if (card.classList.contains('active')) {
         if (!activeProfiles.includes(profile)) activeProfiles.push(profile);
       } else {
         activeProfiles = activeProfiles.filter(p => p !== profile);
-        
-        // If Autism mode is turned off, automatically disable any linked sensory color themes
         if (profile === 'autism') {
           activeTheme = 'none';
-          updateDropdownUI('none');
+          updateThemeUI('none');
           await chrome.storage.local.set({ activeTheme: 'none' });
         }
       }
 
       await chrome.storage.local.set({ activeProfiles });
-      notifyContentScript(activeProfiles, activeTheme);
+      notifyContentScript(activeProfiles, activeTheme, activeDyslexiaFont);
     });
   });
 
-  // Handle custom theme changes
-  selectedOptionUI.addEventListener('click', () => {
+  // ── Theme dropdown interaction ───────────────────────────────────────────
+  themeSelector.querySelector('.selected-option').addEventListener('click', () => {
     themeSelector.classList.toggle('open');
   });
-
   themeSelector.querySelectorAll('.option').forEach(opt => {
     opt.addEventListener('click', async () => {
       const theme = opt.dataset.value;
-      updateDropdownUI(theme);
+      updateThemeUI(theme);
       themeSelector.classList.remove('open');
-      
       await chrome.storage.local.set({ activeTheme: theme });
-      let { activeProfiles = [] } = await chrome.storage.local.get('activeProfiles');
-      notifyContentScript(activeProfiles, theme);
+      let { activeProfiles = [], activeDyslexiaFont = 'comic-sans' } =
+        await chrome.storage.local.get(['activeProfiles', 'activeDyslexiaFont']);
+      notifyContentScript(activeProfiles, theme, activeDyslexiaFont);
     });
   });
 
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!themeSelector.contains(e.target)) {
-      themeSelector.classList.remove('open');
-    }
+  // ── Font dropdown interaction ────────────────────────────────────────────
+  fontSelectedOption.addEventListener('click', () => {
+    fontSelector.classList.toggle('open');
+  });
+  fontSelector.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', async () => {
+      const font = opt.dataset.value;
+      updateFontUI(font);
+      fontSelector.classList.remove('open');
+      await chrome.storage.local.set({ activeDyslexiaFont: font });
+      let { activeProfiles = [], activeTheme = 'none' } =
+        await chrome.storage.local.get(['activeProfiles', 'activeTheme']);
+      notifyContentScript(activeProfiles, activeTheme, font);
+    });
   });
 
-  // Handle reset
+  // ── Close any open dropdown on outside click ─────────────────────────────
+  document.addEventListener('click', (e) => {
+    if (!themeSelector.contains(e.target)) themeSelector.classList.remove('open');
+    if (!fontSelector.contains(e.target)) fontSelector.classList.remove('open');
+  });
+
+  // ── Reset button ─────────────────────────────────────────────────────────
   btnReset.addEventListener('click', async () => {
     cards.forEach(c => c.classList.remove('active'));
-    updateDropdownUI('none');
-    await chrome.storage.local.set({ activeProfiles: [], activeTheme: 'none' });
-    notifyContentScript([], 'none');
+    updateThemeUI('none');
+    updateFontUI('comic-sans');
+    await chrome.storage.local.set({ activeProfiles: [], activeTheme: 'none', activeDyslexiaFont: 'comic-sans' });
+    notifyContentScript([], 'none', 'comic-sans');
   });
 
-  // Handle Simplify command
+  // ── Simplify button ──────────────────────────────────────────────────────
   btnSimplify.addEventListener('click', () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: 'simplifyText' });
@@ -92,10 +112,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-function notifyContentScript(profiles, theme) {
+function notifyContentScript(profiles, theme, font) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0]) {
-      chrome.tabs.sendMessage(tabs[0].id, { profiles, theme });
+      chrome.tabs.sendMessage(tabs[0].id, { profiles, theme, font });
     }
   });
 }

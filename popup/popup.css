@@ -156,3 +156,11 @@ button.secondary:hover {
   border-radius: 4px;
   flex-shrink: 0;
 }
+.font-preview {
+  font-size: 1.1rem;
+  font-weight: bold;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  color: var(--accent);
+}

@@ -96,34 +96,34 @@ html[data-neuro-theme] body {
   color: var(--neuro-text) !important;
 }
 
-/* 3. Re-apply opaque backgrounds ONLY to major structural containers and overlays so things don't become illegible when overlapping */
-html[data-neuro-theme] header, 
-html[data-neuro-theme] footer, 
-html[data-neuro-theme] nav, 
-html[data-neuro-theme] aside, 
-html[data-neuro-theme] section, 
-html[data-neuro-theme] article, 
-html[data-neuro-theme] main,
-html[data-neuro-theme] form,
-html[data-neuro-theme] dialog,
-html[data-neuro-theme] #content,
-html[data-neuro-theme] .mw-body,
-html[data-neuro-theme] .mw-page-container,
-html[data-neuro-theme] table,
+/* 3. Only pure typography leaf nodes get opaque background to keep text readable */
+/* We deliberately skip structural containers (main, section, article, nav etc.) */
+/* because sites like YouTube use them as video player wrappers. */
 html[data-neuro-theme] th,
 html[data-neuro-theme] td,
+html[data-neuro-theme] .mw-body,
+html[data-neuro-theme] .mw-page-container {
+  background-color: var(--neuro-bg) !important;
+  color: var(--neuro-text) !important;
+  border-color: var(--neuro-border) !important;
+}
+
+/* Force explicit borders onto floating overlays — ARIA roles only, no class wildcards */
+/* Class wildcards like [class*="overlay"] are too dangerous as sites like YouTube */
+/* use "overlay" in video player class names, causing the player to be blocked.     */
+html[data-neuro-theme] dialog,
 html[data-neuro-theme] [role="dialog"],
 html[data-neuro-theme] [role="menu"],
 html[data-neuro-theme] [role="listbox"],
 html[data-neuro-theme] [role="tooltip"],
-html[data-neuro-theme] [class*="footer"],
-html[data-neuro-theme] [class*="bottom"],
-html[data-neuro-theme] [class*="sticky"],
+html[data-neuro-theme] [popover],
 html[data-neuro-theme] .modal,
 html[data-neuro-theme] .popup {
   background-color: var(--neuro-bg) !important;
   color: var(--neuro-text) !important;
-  border-color: var(--neuro-border) !important;
+  border: 1px solid var(--neuro-border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* 4. Restore boundaries to interactive elements so users know where to click/type */
@@ -166,13 +166,72 @@ html.neuro-autism iframe {
 
 
 /* 3. DYSLEXIA MODE */
-/* Fallback to comic sans if we haven't loaded OpenDyslexic yet, as it's universally known to help */
-html.neuro-dyslexia *, html.neuro-dyslexia body {
+/* Applied only to actual reading content — NOT to UI chrome like nav, cards, buttons */
+/* This prevents tight UI elements (e.g. YouTube video titles) from overflowing */
+html.neuro-dyslexia p,
+html.neuro-dyslexia li,
+html.neuro-dyslexia dt,
+html.neuro-dyslexia dd,
+html.neuro-dyslexia blockquote,
+html.neuro-dyslexia figcaption,
+html.neuro-dyslexia td,
+html.neuro-dyslexia th,
+html.neuro-dyslexia [class*="description"],
+html.neuro-dyslexia [class*="summary"] {
   font-family: "Comic Sans MS", "Comic Sans", sans-serif !important;
   line-height: 1.8 !important;
-  letter-spacing: 0.05em !important;
-  word-spacing: 0.1em !important;
-  text-align: left !important; /* Overrides justified text */
+  letter-spacing: 0.04em !important;
+  word-spacing: 0.08em !important;
+  text-align: left !important;
+}
+
+/* Headings only get dyslexia spacing when inside a known reading container */
+/* This prevents standalone UI headings (e.g. YouTube video title <h1>) from wrapping */
+html.neuro-dyslexia article h1,
+html.neuro-dyslexia article h2,
+html.neuro-dyslexia article h3,
+html.neuro-dyslexia article h4,
+html.neuro-dyslexia article h5,
+html.neuro-dyslexia article h6,
+html.neuro-dyslexia main h1,
+html.neuro-dyslexia main h2,
+html.neuro-dyslexia main h3,
+html.neuro-dyslexia main h4,
+html.neuro-dyslexia main h5,
+html.neuro-dyslexia main h6,
+html.neuro-dyslexia [class*="article"] h1,
+html.neuro-dyslexia [class*="article"] h2,
+html.neuro-dyslexia [class*="content"] h1,
+html.neuro-dyslexia [class*="content"] h2,
+html.neuro-dyslexia [class*="post"] h1,
+html.neuro-dyslexia [class*="post"] h2 {
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.03em !important;
+  word-spacing: 0.06em !important;
+  text-align: left !important;
+}
+
+/* Font applies everywhere via inheritance — Comic Sans is the default */
+html.neuro-dyslexia * {
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif !important;
+}
+
+/* Per-font overrides via data-neuro-font attribute set by content.js */
+html.neuro-dyslexia[data-neuro-font="roboto"] * {
+  font-family: 'Roboto', sans-serif !important;
+}
+html.neuro-dyslexia[data-neuro-font="helvetica"] * {
+  font-family: Helvetica, Arial, sans-serif !important;
+}
+html.neuro-dyslexia[data-neuro-font="nunito"] * {
+  font-family: 'Nunito', sans-serif !important;
+}
+html.neuro-dyslexia[data-neuro-font="opendyslexic"] * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+html.neuro-dyslexia[data-neuro-font="atkinson"] * {
+  font-family: 'Atkinson Hyperlegible', sans-serif !important;
 }
 
 /* Base styling for our AI simplified blocks */
